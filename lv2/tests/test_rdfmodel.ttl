@@ -43,6 +43,13 @@
 			   foaf:name "Just John";
                        ].
 
+<http://mytest/item_a> a test:Item ;
+		       test:hasProperty test:propA.
+
+<http://mytest/item_b> a test:Item ;
+		       test:hasProperty test:propA;
+		       test:hasProperty test:propB.
+
 <http://mytest/otherstuff> a test:OtherStuff ;
                     test:name "This is one stuff".
 

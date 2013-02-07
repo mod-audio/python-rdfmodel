@@ -43,6 +43,9 @@ class TestModel(model.Model):
 
     smartpeople = model.ListField(ns.smartpeople, model.InlineModelField, 'SmartPerson')
 
+    property_a = model.BooleanPropertyField(ns.hasProperty, ns.propA)
+    property_b = model.BooleanPropertyField(ns.hasProperty, ns.propB)
+
 class Foaf(model.Model):
     foaf = rdflib.Namespace('http://person/ns#')
 
@@ -148,6 +151,23 @@ class TestTypeFilter(BaseTest):
                                                             'age': None,
                                                             'weight': None,
                                                             } ])
+
+class PropertyTest(unittest.TestCase):
+    def test_boolean_property(self, *args, **kwargs):
+        ttl = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_rdfmodel.ttl')
+
+        item_a = TestModel(rdflib.term.URIRef('http://mytest/item_a'))
+        item_a.parse(ttl)
+
+        self.assertTrue(item_a.data['property_a'])
+        self.assertTrue(not item_a.data['property_b'])
+
+        item_b = TestModel(rdflib.term.URIRef('http://mytest/item_b'))
+        item_b.parse(ttl)
+
+        self.assertTrue(item_b.data['property_a'])
+        self.assertTrue(item_b.data['property_b'])
+
 
 class OtherModel(model.Model):
     name = model.StringField(ns.name)

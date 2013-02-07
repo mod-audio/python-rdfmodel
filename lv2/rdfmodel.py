@@ -18,9 +18,11 @@ class DataField(Field):
         self.predicate = predicate
         self.modifier = modifier
         self.filter = filter
+        self.object = None
 
     def extract(self, model):
-        for data in model.get_objects(self.predicate):
+        for triple in model.triples([model.subject, self.predicate, self.object]):
+            data = triple[2]
             data = self.format_data(data, model)
             data = self.modify_and_filter(data)
             if data is not None:
@@ -55,6 +57,14 @@ class FloatField(DataField):
             return float(data)
         except (TypeError, ValueError):
             return None
+
+class BooleanPropertyField(DataField):
+    def __init__(self, predicate, prop, **kwargs):
+        super(BooleanPropertyField, self).__init__(predicate, **kwargs)
+        self.object = prop
+
+    def format_data(self, data, model):
+        return data is not None
 
 #mixin
 class ModelField(object):

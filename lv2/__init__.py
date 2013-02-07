@@ -39,6 +39,7 @@ class Plugin(model.Model):
 class Port(model.Model):
     symbol = model.StringField(lv2core.symbol)
     name = model.StringField(lv2core.name)
+    index = model.IntegerField(lv2core.index)
 
 class AudioInputPort(Port):
     _type = model.TypeField(lv2core.AudioPort, lv2core.InputPort)
@@ -48,6 +49,13 @@ class AudioOutputPort(Port):
     
 class ControlInputPort(Port):
     _type = model.TypeField(lv2core.ControlPort, lv2core.InputPort)
+    
+    default = model.FloatField(lv2core.default)
+    minimum = model.FloatField(lv2core.minimum)
+    maximum = model.FloatField(lv2core.maximum)
+
+    toggled = model.BooleanPropertyField(lv2core.portProperty, lv2core.toggled)
+    enumeration = model.BooleanPropertyField(lv2core.portProperty, lv2core.enumeration)
 
 class ControlOutputPort(Port):
     _type = model.TypeField(lv2core.ControlPort, lv2core.OutputPort)
